@@ -2,34 +2,44 @@
 
 @layer base {
   :root {
-    /* Signal Design System Tokens - Deep Wine & Slate Theme */
-    --color-brand-wine: #881337;
-    --color-brand-wine-hover: #701a2e;
-    --color-brand-wine-light: #9f1239;
+    /* Signal Design System Tokens - Clean Light Theme with Deep Wine Accents */
+
+    /* Brand / Accent */
+    --color-brand-wine: #7f1d31;
+    --color-brand-wine-hover: #6b1829;
+    --color-brand-wine-light: #a21c3a;
     --color-brand-wine-accent: #be123c;
-    --color-brand-wine-bg: #4c0519;
-    --color-brand-wine-tint: rgba(136, 19, 55, 0.12);
-    --color-brand-wine-glow: rgba(159, 18, 57, 0.25);
+    --color-brand-wine-bg: #fff1f2;
+    --color-brand-wine-tint: rgba(127, 29, 49, 0.08);
+    --color-brand-wine-glow: rgba(127, 29, 49, 0.15);
 
-    --color-bg-base: #0b0e14;
-    --color-bg-surface: #131722;
-    --color-bg-surface-elevated: #1a1f2e;
-    
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #94a3b8;
+    /* Surfaces */
+    --color-bg-base: #ffffff;
+    --color-bg-surface: #ffffff;
+    --color-bg-surface-elevated: #f8fafc;
+    --color-bg-muted: #f1f5f9;
+
+    /* Text */
+    --color-text-primary: #1e293b;
+    --color-text-secondary: #475569;
     --color-text-muted: #64748b;
-    
-    --color-border-subtle: #222938;
-    --color-border-wine: rgba(159, 18, 57, 0.3);
+    --color-text-on-wine: #ffffff;
 
+    /* Borders */
+    --color-border-subtle: #e2e8f0;
+    --color-border-wine: rgba(127, 29, 49, 0.22);
+
+    /* Radii */
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
     --radius-2xl: 1.25rem;
 
-    --shadow-wine-lg: 0 10px 30px -5px rgba(136, 19, 55, 0.3);
-    --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+    /* Shadows */
+    --shadow-wine-lg: 0 10px 25px -5px rgba(127, 29, 49, 0.15);
+    --shadow-card: 0 2px 10px -1px rgba(30, 41, 59, 0.06);
+    --shadow-soft: 0 1px 3px 0 rgba(30, 41, 59, 0.04);
   }
 
   body {
@@ -40,12 +50,13 @@
   }
 }
 
-/* Glassmorphism & Custom Signal Card Utilities */
+/* Glassmorphism & Custom Signal Card Utilities (Light Mode) */
 .glass-panel {
-  background: rgba(19, 23, 34, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--color-border-subtle);
+  box-shadow: 0 4px 16px -2px rgba(30, 41, 59, 0.05);
 }
 
 .glass-panel-hover {
@@ -53,20 +64,27 @@
 }
 
 .glass-panel-hover:hover {
-  background: rgba(26, 31, 46, 0.95);
-  border-color: rgba(159, 18, 57, 0.4);
-  box-shadow: 0 8px 30px rgba(136, 19, 55, 0.15);
+  background: #ffffff;
+  border-color: rgba(127, 29, 49, 0.35);
+  box-shadow: 0 10px 30px -5px rgba(127, 29, 49, 0.14);
   transform: translateY(-1px);
 }
 
+/* Section helpers for light neutral backgrounds */
+.section-muted {
+  background-color: var(--color-bg-surface-elevated);
+  border-top: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
 .gradient-text-wine {
-  background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #881337 100%);
+  background: linear-gradient(135deg, #7f1d31 0%, #a21c3a 50%, #be123c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gradient-text-hero {
-  background: linear-gradient(135deg, #ffffff 30%, #f43f5e 70%, #be123c 100%);
+  background: linear-gradient(135deg, #1e293b 30%, #7f1d31 75%, #a21c3a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -74,12 +92,12 @@
 .gradient-border-wine {
   position: relative;
   border-radius: 1rem;
-  background: linear-gradient(135deg, rgba(225, 29, 72, 0.4), rgba(136, 19, 55, 0.2));
+  background: linear-gradient(135deg, rgba(127, 29, 49, 0.3), rgba(190, 18, 60, 0.15));
   padding: 1px;
 }
 
 .gradient-border-inner {
-  background: #131722;
+  background: #ffffff;
   border-radius: calc(1rem - 1px);
 }
 
@@ -108,7 +126,7 @@
   outline: none;
 }
 .focus-ring-wine:focus-visible {
-  outline: 2px solid #e11d48;
+  outline: 2px solid #7f1d31;
   outline-offset: 2px;
 }
 
@@ -119,14 +137,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0e14;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #222938;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #881337;
+  background: #7f1d31;
 }

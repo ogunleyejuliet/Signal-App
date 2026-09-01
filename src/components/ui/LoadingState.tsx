@@ -18,10 +18,10 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-3">
-      <div className="p-3 rounded-full bg-rose-950/60 border border-rose-800/50 text-rose-400">
+      <div className="p-3 rounded-full bg-rose-50 border border-rose-200 text-rose-700">
         <Loader2 className={`${loaderSizes[size]} animate-spin`} />
       </div>
-      {label && <p className="text-xs font-semibold text-slate-300 animate-pulse">{label}</p>}
+      {label && <p className="text-xs font-semibold text-slate-500 animate-pulse">{label}</p>}
     </div>
   );
 };

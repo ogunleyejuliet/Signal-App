@@ -17,19 +17,19 @@ export const Alert: React.FC<AlertProps> = ({
   className = ''
 }) => {
   const alertStyles = {
-    info: 'bg-sky-500/10 border-sky-500/30 text-sky-200',
-    success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200',
-    warning: 'bg-amber-500/10 border-amber-500/30 text-amber-200',
-    error: 'bg-rose-500/10 border-rose-500/30 text-rose-200',
-    brand: 'bg-rose-950/70 border-rose-800/60 text-rose-100 shadow-lg shadow-rose-950/30'
+    info: 'bg-sky-50 border-sky-200 text-sky-900',
+    success: 'bg-emerald-50 border-emerald-200 text-emerald-900',
+    warning: 'bg-amber-50 border-amber-200 text-amber-900',
+    error: 'bg-rose-50 border-rose-200 text-rose-900',
+    brand: 'bg-rose-50 border-rose-200 text-rose-900'
   };
 
   const icons = {
-    info: <Info className="w-5 h-5 text-sky-400 shrink-0" />,
-    success: <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />,
-    warning: <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />,
-    brand: <Info className="w-5 h-5 text-rose-400 shrink-0" />
+    info: <Info className="w-5 h-5 text-sky-600 shrink-0" />,
+    success: <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />,
+    warning: <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />,
+    error: <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />,
+    brand: <Info className="w-5 h-5 text-rose-600 shrink-0" />
   };
 
   return (
@@ -42,7 +42,7 @@ export const Alert: React.FC<AlertProps> = ({
       {onClose && (
         <button
           onClick={onClose}
-          className="text-slate-400 hover:text-slate-100 p-1 rounded-lg hover:bg-slate-800/50 transition cursor-pointer"
+          className="text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>

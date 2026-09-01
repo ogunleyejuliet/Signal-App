@@ -25,22 +25,22 @@ export const ImprovementActionCard: React.FC<ImprovementActionCardProps> = ({
         <Badge variant={priorityVariant} size="sm">
           {priority} Priority Action
         </Badge>
-        <span className="text-[11px] font-semibold text-rose-400">Signal Optimization</span>
+        <span className="text-[11px] font-semibold text-rose-700">Signal Optimization</span>
       </div>
 
       <div className="space-y-2">
-        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-rose-950/30 border border-rose-900/40 text-xs text-rose-200">
-          <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900">
+          <AlertCircle className="w-4 h-4 text-rose-700 shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold block text-white mb-0.5">Problem Identified:</span>
+            <span className="font-bold block text-slate-900 mb-0.5">Problem Identified:</span>
             {problem}
           </div>
         </div>
 
-        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold block text-white mb-0.5">Recommended Action:</span>
+            <span className="font-bold block text-slate-900 mb-0.5">Recommended Action:</span>
             {recommendedAction}
           </div>
         </div>

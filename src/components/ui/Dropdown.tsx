@@ -40,7 +40,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       {open && (
         <div
-          className={`absolute z-50 mt-2 w-48 rounded-xl bg-slate-900 border border-slate-700 shadow-2xl py-1 focus:outline-none ${
+          className={`absolute z-50 mt-2 w-48 rounded-xl bg-white border border-slate-200 shadow-xl py-1 focus:outline-none ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
         >
@@ -53,8 +53,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
               }}
               className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium transition-colors cursor-pointer ${
                 item.destructive
-                  ? 'text-rose-400 hover:bg-rose-950/50'
-                  : 'text-slate-300 hover:text-white hover:bg-rose-950/40'
+                  ? 'text-rose-700 hover:bg-rose-50'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-rose-50'
               }`}
             >
               {item.icon && <span className="shrink-0">{item.icon}</span>}

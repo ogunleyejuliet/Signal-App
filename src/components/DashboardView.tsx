@@ -34,21 +34,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       header: 'Audit Name',
       accessor: (row: Audit) => (
         <div>
-          <div className="font-bold text-white text-sm">{row.title}</div>
-          <div className="text-[11px] text-slate-400">Target Role: {row.targetRole}</div>
+          <div className="font-bold text-slate-900 text-sm">{row.title}</div>
+          <div className="text-[11px] text-slate-500">Target Role: {row.targetRole}</div>
         </div>
       )
     },
     {
       header: 'Execution Date',
       accessor: (row: Audit) => (
-        <span className="text-xs font-mono text-slate-300">{row.date}</span>
+        <span className="text-xs font-mono text-slate-500">{row.date}</span>
       )
     },
     {
       header: 'Tested Queries',
       accessor: (row: Audit) => (
-        <span className="text-xs text-slate-300">
+        <span className="text-xs text-slate-500">
           {row.queriesTestedCount} queries tested ({row.queriesCitedCount || 14} cited)
         </span>
       )
@@ -56,7 +56,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     {
       header: 'Signal Index',
       accessor: (row: Audit) => (
-        <span className="text-sm font-mono font-extrabold text-rose-300">
+        <span className="text-sm font-mono font-extrabold text-rose-700">
           {row.overallScore} / 100
         </span>
       )
@@ -78,13 +78,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <div className="space-y-8 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Top Welcome Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-rose-950/60">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-rose-100">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             Freelancer Signal Dashboard
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Monitoring discoverability for <span className="text-rose-300 font-bold">{mockProfile.name}</span> ({mockProfile.title})
+          <p className="text-sm text-slate-500 mt-1">
+            Monitoring discoverability for <span className="text-rose-700 font-bold">{mockProfile.name}</span> ({mockProfile.title})
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -113,8 +113,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-rose-400" />
-                <span className="text-xs font-mono uppercase text-slate-400 tracking-wider">
+                <Calendar className="w-4 h-4 text-rose-700" />
+                <span className="text-xs font-mono uppercase text-slate-500 tracking-wider">
                   Latest Audit Overview
                 </span>
               </div>
@@ -124,8 +124,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             <div>
-              <h2 className="text-xl font-bold text-white">{currentAudit.title}</h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <h2 className="text-xl font-bold text-slate-900">{currentAudit.title}</h2>
+              <p className="text-xs text-slate-500 mt-0.5">
                 Target Profile: {currentAudit.targetProfile} • Executed {currentAudit.date}
               </p>
             </div>
@@ -133,26 +133,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {/* AI Engine Scores Summary */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
               {currentAudit.engineScores.map((engine) => (
-                <div key={engine.engine} className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+                <div key={engine.engine} className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
                     <span>{engine.name}</span>
-                    <span className="text-white font-mono">{engine.score}%</span>
+                    <span className="text-slate-900 font-mono">{engine.score}%</span>
                   </div>
-                  <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-slate-200 overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-rose-900 to-rose-500 rounded-full"
                       style={{ width: `${engine.score}%` }}
                     />
                   </div>
-                  <span className="block text-[10px] text-slate-500 truncate font-semibold">{engine.rankPosition}</span>
+                  <span className="block text-[10px] text-slate-400 truncate font-semibold">{engine.rankPosition}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-slate-800">
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <Clock className="w-3.5 h-3.5 text-rose-400" />
+          <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <Clock className="w-3.5 h-3.5 text-rose-700" />
               <span>Next scheduled audit: In 7 days</span>
             </div>
             <Button
@@ -173,8 +173,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-rose-400" />
+            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-rose-700" />
               Top Actionable Optimization Recommendations
             </h3>
             <Badge variant="brand">2 High Priority</Badge>
@@ -199,8 +199,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Recent Audits Table */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <Search className="w-4 h-4 text-rose-400" />
+          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <Search className="w-4 h-4 text-rose-700" />
             Audit History & Benchmarks
           </h3>
           <Button variant="outline" size="sm" onClick={onRunAudit}>

@@ -19,17 +19,17 @@ export const VisibilityGauge: React.FC<VisibilityGaugeProps> = ({
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
-  let scoreColor = "#e11d48"; // Wine Rose / Accent
-  if (score >= 75) scoreColor = "#10b981"; // Emerald
-  else if (score >= 50) scoreColor = "#f59e0b"; // Amber
+  let scoreColor = "#881337"; // Wine Rose / Primary
+  if (score >= 75) scoreColor = "#059669"; // Emerald
+  else if (score >= 50) scoreColor = "#d97706"; // Amber
   else scoreColor = "#be123c"; // Deep Wine Crimson
 
   return (
     <div className="flex flex-col items-center justify-center relative select-none">
       <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-        {/* Glowing aura */}
+        {/* Soft glowing aura */}
         <div 
-          className="absolute inset-0 rounded-full blur-xl opacity-30 animate-pulse"
+          className="absolute inset-0 rounded-full blur-xl opacity-20 animate-pulse"
           style={{ backgroundColor: scoreColor }}
         />
 
@@ -39,7 +39,7 @@ export const VisibilityGauge: React.FC<VisibilityGaugeProps> = ({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="#1e293b"
+            stroke="#e2e8f0"
             strokeWidth={strokeWidth}
             fill="transparent"
           />
@@ -60,10 +60,10 @@ export const VisibilityGauge: React.FC<VisibilityGaugeProps> = ({
 
         {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="text-4xl font-extrabold tracking-tight text-white">
+          <span className="text-4xl font-extrabold tracking-tight text-slate-900">
             {score}
           </span>
-          <span className="text-xs uppercase font-bold tracking-widest text-slate-400 mt-0.5">
+          <span className="text-xs uppercase font-bold tracking-widest text-slate-500 mt-0.5">
             / 100
           </span>
         </div>
@@ -71,8 +71,8 @@ export const VisibilityGauge: React.FC<VisibilityGaugeProps> = ({
 
       {label && (
         <div className="mt-3 text-center">
-          <p className="text-sm font-bold text-slate-100">{label}</p>
-          {sublabel && <p className="text-xs text-slate-400 mt-0.5">{sublabel}</p>}
+          <p className="text-sm font-bold text-slate-900">{label}</p>
+          {sublabel && <p className="text-xs text-slate-500 mt-0.5">{sublabel}</p>}
         </div>
       )}
     </div>

@@ -36,11 +36,11 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
     <div className={`w-full space-y-1.5 ${className}`}>
       {(label || showPercentage) && (
         <div className="flex items-center justify-between text-xs">
-          {label && <span className="font-semibold text-slate-300">{label}</span>}
-          {showPercentage && <span className="font-mono font-bold text-slate-200">{clampedValue}%</span>}
+          {label && <span className="font-semibold text-slate-600">{label}</span>}
+          {showPercentage && <span className="font-mono font-bold text-slate-900">{clampedValue}%</span>}
         </div>
       )}
-      <div className={`w-full bg-slate-900 rounded-full overflow-hidden border border-slate-800/80 p-0.5 ${heightClasses[size]}`}>
+      <div className={`w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200 p-0.5 ${heightClasses[size]}`}>
         <div
           className={`h-full rounded-full transition-all duration-500 ease-out ${barColors[color]}`}
           style={{ width: `${clampedValue}%` }}

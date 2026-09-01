@@ -42,24 +42,24 @@ export const ReportView: React.FC<ReportViewProps> = ({
   return (
     <div className="space-y-8 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Report Header & Action Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-rose-950/60">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-rose-100">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <button
               onClick={onBackToDashboard}
-              className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-semibold cursor-pointer"
+              className="text-xs text-rose-700 hover:text-rose-900 flex items-center gap-1 font-semibold cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               Back to Dashboard
             </button>
-            <span className="text-slate-600">•</span>
+            <span className="text-slate-400">•</span>
             <Badge variant="neutral" size="sm">{currentAudit.date}</Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             AI Visibility & Citation Audit Report
           </h1>
-          <p className="text-xs text-slate-400">
-            Target Profile: <span className="text-slate-200 font-medium">{currentAudit.targetProfile}</span> • Audit ID: <span className="font-mono text-rose-400">{currentAudit.id}</span>
+          <p className="text-xs text-slate-500">
+            Target Profile: <span className="text-slate-800 font-medium">{currentAudit.targetProfile}</span> • Audit ID: <span className="font-mono text-rose-700">{currentAudit.id}</span>
           </p>
         </div>
 
@@ -90,25 +90,25 @@ export const ReportView: React.FC<ReportViewProps> = ({
             <Card key={engine.engine} borderVariant="wine" hoverEffect className="space-y-3 flex flex-col justify-between">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <Bot className="w-4 h-4 text-rose-400" />
+                  <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                    <Bot className="w-4 h-4 text-rose-700" />
                     {engine.name}
                   </span>
                   <Badge variant={engine.status} size="sm">
                     {engine.score}%
                   </Badge>
                 </div>
-                <div className="text-[11px] text-slate-400 font-mono">
-                  Rank: <strong className="text-white">{engine.rankPosition}</strong>
+                <div className="text-[11px] text-slate-500 font-mono">
+                  Rank: <strong className="text-slate-900">{engine.rankPosition}</strong>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center justify-between text-[10px] text-slate-400">
+                <div className="flex items-center justify-between text-[10px] text-slate-500">
                   <span>Citation Rate</span>
-                  <span className="text-white font-mono">{engine.citationRate}%</span>
+                  <span className="text-slate-900 font-mono">{engine.citationRate}%</span>
                 </div>
-                <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                <div className="w-full h-1.5 rounded-full bg-slate-200 overflow-hidden">
                   <div
                     className="h-full bg-rose-700 rounded-full"
                     style={{ width: `${engine.citationRate}%` }}
@@ -132,11 +132,11 @@ export const ReportView: React.FC<ReportViewProps> = ({
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Search className="w-4 h-4 text-rose-400" />
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Search className="w-4 h-4 text-rose-700" />
                 Client Query Citation Audit Results
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500">
                 Simulated high-intent client search prompts across ChatGPT, Perplexity, Claude, and Gemini
               </p>
             </div>
@@ -163,26 +163,26 @@ export const ReportView: React.FC<ReportViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {currentAudit.engineScores.map((eng) => (
             <Card key={eng.engine} borderVariant="wine" className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div className="flex items-center gap-2">
-                  <Bot className="w-5 h-5 text-rose-400" />
-                  <h3 className="text-base font-bold text-white">{eng.name}</h3>
+                  <Bot className="w-5 h-5 text-rose-700" />
+                  <h3 className="text-base font-bold text-slate-900">{eng.name}</h3>
                 </div>
                 <AiRecommendationStatus status={eng.status === 'optimal' ? 'Recommended' : 'Mentioned'} rankText={eng.rankPosition} />
               </div>
 
-              <div className="space-y-2 text-xs text-slate-300">
-                <div className="flex justify-between py-1 border-b border-slate-900">
-                  <span className="text-slate-400">Recommendation Position:</span>
-                  <span className="font-bold text-white font-mono">{eng.rankPosition}</span>
+              <div className="space-y-2 text-xs text-slate-600">
+                <div className="flex justify-between py-1 border-b border-slate-100">
+                  <span className="text-slate-500">Recommendation Position:</span>
+                  <span className="font-bold text-slate-900 font-mono">{eng.rankPosition}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-900">
-                  <span className="text-slate-400">Query Citation Rate:</span>
-                  <span className="font-bold text-white font-mono">{eng.citationRate}%</span>
+                <div className="flex justify-between py-1 border-b border-slate-100">
+                  <span className="text-slate-500">Query Citation Rate:</span>
+                  <span className="font-bold text-slate-900 font-mono">{eng.citationRate}%</span>
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-400">Primary Index Sources:</span>
-                  <span className="text-slate-300 font-semibold">GitHub, Personal Site, Web Citations</span>
+                  <span className="text-slate-500">Primary Index Sources:</span>
+                  <span className="text-slate-700 font-semibold">GitHub, Personal Site, Web Citations</span>
                 </div>
               </div>
             </Card>
@@ -195,11 +195,11 @@ export const ReportView: React.FC<ReportViewProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-amber-400" />
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Lightbulb className="w-4 h-4 text-amber-500" />
                 Actionable AI Discoverability Optimization Checklist
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500">
                 Follow these recommendations to improve your Signal Visibility Score
               </p>
             </div>

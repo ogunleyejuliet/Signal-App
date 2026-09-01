@@ -41,7 +41,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#090d16] text-slate-100 font-sans">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans">
       {/* Top Header Navbar */}
       <Navbar
         currentView={currentView}
@@ -96,11 +96,11 @@ export default function Home() {
 
             {dashboardTab === 'settings' && (
               <div className="p-8 space-y-4">
-                <h2 className="text-2xl font-bold text-white">Profile & AI Index Settings</h2>
-                <p className="text-sm text-slate-400">
+                <h2 className="text-2xl font-bold text-slate-900">Profile & AI Index Settings</h2>
+                <p className="text-sm text-slate-500">
                   Configure your primary portfolio URLs, GitHub repositories, and search keywords for future automated audits.
                 </p>
-                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500">
                   Settings placeholder mode. Connect custom domain / webhooks in production.
                 </div>
               </div>
@@ -116,12 +116,12 @@ export default function Home() {
         onComplete={handleAuditComplete}
       />
 
-      {/* Modern Dark SaaS Footer */}
-      <footer className="mt-auto border-t border-slate-800/80 bg-slate-950 py-8 text-center text-xs text-slate-500">
+      {/* Modern Light SaaS Footer */}
+      <footer className="mt-auto border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-300">SIGNAL AI</span>
-            <span>— Freelancer AI Discoverability Engine</span>
+            <span className="font-bold text-slate-900">SIGNAL AI</span>
+            <span className="text-slate-400">— Freelancer AI Discoverability Engine</span>
           </div>
           <div className="flex items-center gap-4 text-slate-400">
             <span>ChatGPT-4o</span>

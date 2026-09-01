@@ -44,7 +44,7 @@ export const AiRecommendationStatus: React.FC<AiRecommendationStatusProps> = ({
         {status}
       </Badge>
       {(rankText || engineName) && (
-        <span className="text-xs font-semibold text-slate-400">
+        <span className="text-xs font-semibold text-slate-500">
           {engineName && `${engineName}: `}{rankText}
         </span>
       )}

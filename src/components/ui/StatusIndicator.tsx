@@ -37,7 +37,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
         )}
         <span className={`relative inline-flex rounded-full ${sizeClasses[size]} ${statusColors[status]}`} />
       </span>
-      {label && <span className="text-xs font-semibold text-slate-300">{label}</span>}
+      {label && <span className="text-xs font-semibold text-slate-600">{label}</span>}
     </span>
   );
 };

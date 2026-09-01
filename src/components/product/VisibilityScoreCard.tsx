@@ -22,14 +22,14 @@ export const VisibilityScoreCard: React.FC<VisibilityScoreCardProps> = ({
 
   return (
     <Card borderVariant="wine" hoverEffect className={`space-y-6 ${className}`}>
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-rose-950/60 border border-rose-800/40 text-rose-400">
+          <div className="p-1.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700">
             <Sparkles className="w-4 h-4" />
           </div>
-          <h3 className="text-sm font-bold text-white tracking-wide">AI Visibility Score</h3>
+          <h3 className="text-sm font-bold text-slate-900 tracking-wide">AI Visibility Score</h3>
         </div>
-        <span className="text-[11px] font-semibold text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-800/40">
+        <span className="text-[11px] font-semibold text-rose-800 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
           Live Index
         </span>
       </div>
@@ -43,18 +43,18 @@ export const VisibilityScoreCard: React.FC<VisibilityScoreCardProps> = ({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-        <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Citation Rate</span>
-          <span className="text-lg font-extrabold text-emerald-400 flex items-center justify-center gap-1 mt-0.5">
+      <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200/80">
+        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">Citation Rate</span>
+          <span className="text-lg font-extrabold text-emerald-700 flex items-center justify-center gap-1 mt-0.5">
             <TrendingUp className="w-4 h-4" />
             {citationRate}%
           </span>
         </div>
-        <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Active Protection</span>
-          <span className="text-lg font-extrabold text-rose-300 flex items-center justify-center gap-1 mt-0.5">
-            <ShieldCheck className="w-4 h-4 text-rose-400" />
+        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+          <span className="text-[10px] uppercase font-bold text-slate-500 block">Active Protection</span>
+          <span className="text-lg font-extrabold text-rose-700 flex items-center justify-center gap-1 mt-0.5">
+            <ShieldCheck className="w-4 h-4 text-rose-700" />
             4 Engines
           </span>
         </div>
