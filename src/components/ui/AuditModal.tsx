@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Search, Sparkles, CheckCircle2, Loader2, Bot, ArrowRight } from 'lucide-react';
 import { Button } from './Button';
 
-interface AuditModalProps {
+export interface AuditModalProps {
   isOpen: boolean;
   onClose: () => void;
   onComplete?: () => void;
@@ -54,12 +54,12 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-lg glass-panel rounded-2xl border border-slate-700/80 shadow-2xl p-6 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-lg glass-panel rounded-2xl border border-rose-900/40 shadow-2xl p-6 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+            <div className="p-2 rounded-xl bg-rose-950/60 border border-rose-800/60 text-rose-400">
               <Sparkles className="w-5 h-5 animate-pulse" />
             </div>
             <div>
@@ -88,7 +88,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
                 onChange={(e) => setProfileName(e.target.value)}
                 required
                 placeholder="e.g. Alex Vance"
-                className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600 transition"
               />
             </div>
 
@@ -102,14 +102,14 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
                 onChange={(e) => setProfileRole(e.target.value)}
                 required
                 placeholder="e.g. Senior Next.js Developer"
-                className="w-full px-3.5 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600 transition"
               />
             </div>
 
-            <div className="p-3 rounded-lg bg-slate-900/60 border border-slate-800 text-xs text-slate-400 flex items-start gap-2.5">
-              <Bot className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+            <div className="p-3 rounded-xl bg-rose-950/30 border border-rose-900/40 text-xs text-rose-200/90 flex items-start gap-2.5">
+              <Bot className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
               <span>
-                Signal will test 18 high-intent client queries across <strong>ChatGPT-4o</strong>, <strong>Perplexity AI</strong>, <strong>Claude 3.5</strong>, and <strong>Gemini</strong>.
+                Signal will test high-intent client queries across <strong>ChatGPT-4o</strong>, <strong>Perplexity AI</strong>, <strong>Claude 3.5</strong>, and <strong>Gemini</strong>.
               </span>
             </div>
 
@@ -125,7 +125,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
         ) : (
           <div className="py-6 space-y-6">
             <div className="text-center space-y-2">
-              <div className="inline-flex p-3 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 mb-1">
+              <div className="inline-flex p-3 rounded-full bg-rose-950/60 border border-rose-800/60 text-rose-400 mb-1">
                 <Loader2 className="w-8 h-8 animate-spin" />
               </div>
               <h4 className="text-base font-bold text-white">Analyzing AI Visibility for {profileName}</h4>
@@ -145,7 +145,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
                       isDone
                         ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
                         : isCurrent
-                        ? 'bg-indigo-500/10 border-indigo-500/50 text-indigo-200 shadow-md shadow-indigo-500/10'
+                        ? 'bg-rose-950/60 border-rose-700/60 text-rose-200 shadow-md shadow-rose-950/30'
                         : 'bg-slate-900/40 border-slate-800 text-slate-500'
                     }`}
                   >
@@ -153,7 +153,7 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
                       {isDone ? (
                         <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                       ) : isCurrent ? (
-                        <Loader2 className="w-4 h-4 text-indigo-400 animate-spin shrink-0" />
+                        <Loader2 className="w-4 h-4 text-rose-400 animate-spin shrink-0" />
                       ) : (
                         <div className="w-4 h-4 rounded-full border border-slate-700 shrink-0" />
                       )}

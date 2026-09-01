@@ -21,7 +21,7 @@ I broke the idea down and clarified:
 
 This helped me understand what I was actually trying to build instead of just having an exciting idea.
 
-3. Created the product concept**
+3. Created the product concept\*\*
 
 I turned the refined idea into a clearer product concept with:
 
@@ -35,7 +35,6 @@ I turned the refined idea into a clearer product concept with:
 * Future features
 * Risks
 * Success metrics
-
 4. Created the PRD
 
 I then turned the product concept into a PRD that explains what the product should do and how each feature should work.
@@ -56,8 +55,7 @@ The phases are:
 6. Report generation
 7. Audit history + re-audit
 8. Security, testing + deployment
-
-6. Started Phase 1
+9. Started Phase 1
 
 For Phase 1, I focused only on the foundation of the product.
 
@@ -75,4 +73,20 @@ I built:
 * Responsive layouts
 
 I intentionally did not build the AI, database, authentication, or audit system yet.
+
+
+
+**Next change**
+
+
+
+Visual Identity
+
+
+
+Before moving to Phase 2, I worked on Signal’s visual identity. I defined the brand direction, color palette, typography, design tokens, and reusable UI components. I took inspiration from Fiverr’s clean and friendly visual style, but adapted it into an original wine/burgundy identity for Signal.
+
+
+
+The goal was to make the product feel modern, confident, approachable, and professional while keeping the interface simple and easy to use.
 
