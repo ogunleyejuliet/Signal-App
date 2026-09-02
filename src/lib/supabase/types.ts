@@ -21,3 +21,46 @@ export interface ProfileLink {
 export interface ProfileWithLinks extends Profile {
   links: ProfileLink[];
 }
+
+// ------------------------------------------------------------------
+// Audit types (Phase 4)
+// ------------------------------------------------------------------
+
+export type AuditStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+export type QueryType = 'local_discovery' | 'specialization' | 'service' | 'hiring_intent';
+
+export interface Audit {
+  id: string;
+  user_id: string;
+  status: AuditStatus;
+  profile_snapshot: ProfileSnapshot;
+  queries_count: number;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AuditQuery {
+  id: string;
+  audit_id: string;
+  query_text: string;
+  query_type: QueryType;
+  category: string;
+  created_at: string;
+}
+
+export interface AuditWithQueries extends Audit {
+  queries: AuditQuery[];
+}
+
+/** Frozen copy of the profile at the time the audit was created. */
+export interface ProfileSnapshot {
+  name: string;
+  profession: string;
+  location: string;
+  specialization: string;
+  services: string;
+  target_clients: string;
+  links: { type: string; url: string }[];
+}

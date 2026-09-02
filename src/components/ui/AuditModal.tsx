@@ -1,180 +1,211 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { X, Search, Sparkles, CheckCircle2, Loader2, Bot, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  X, Search, Sparkles, CheckCircle2, Loader2, AlertCircle,
+  ArrowRight, ExternalLink, Globe, Code2, Wrench, Target,
+} from 'lucide-react';
 import { Button } from './Button';
+import { Alert } from './Alert';
+import { createAudit, type CreateAuditResult } from '@/lib/supabase/audit-actions';
+import type { AuditWithQueries } from '@/lib/supabase/types';
 
 export interface AuditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onComplete?: () => void;
+  onComplete?: (audit: AuditWithQueries) => void;
 }
 
-const auditSteps = [
-  { id: 1, label: "Scanning public portfolio & structured schema...", engine: "Perplexity AI" },
-  { id: 2, label: "Evaluating ranking in high-intent freelancer queries...", engine: "ChatGPT-4o" },
-  { id: 3, label: "Analyzing GitHub & professional citations...", engine: "Claude 3.5 Sonnet" },
-  { id: 4, label: "Testing Gemini Knowledge Graph recommendations...", engine: "Google Gemini" },
-  { id: 5, label: "Calculating Signal Visibility Index Score...", engine: "Signal AI Indexer" }
-];
+const STATUS_LABELS: Record<string, string> = {
+  pending: 'Queued',
+  processing: 'Generating queries…',
+  completed: 'Complete',
+  failed: 'Failed',
+};
+
+const QUERY_TYPE_ICONS: Record<string, React.ReactNode> = {
+  local_discovery: <Globe className="w-3.5 h-3.5 text-blue-600" />,
+  specialization: <Code2 className="w-3.5 h-3.5 text-purple-600" />,
+  service: <Wrench className="w-3.5 h-3.5 text-amber-600" />,
+  hiring_intent: <Target className="w-3.5 h-3.5 text-emerald-600" />,
+};
+
+const QUERY_TYPE_LABELS: Record<string, string> = {
+  local_discovery: 'Local',
+  specialization: 'Specialization',
+  service: 'Service',
+  hiring_intent: 'Hiring Intent',
+};
 
 export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onComplete }) => {
-  const [profileName, setProfileName] = useState("Alex Vance");
-  const [profileRole, setProfileRole] = useState("Senior Next.js & React Developer");
-  const [isRunning, setIsRunning] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [status, setStatus] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
+  const [result, setResult] = useState<AuditWithQueries | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isRunning) {
-      const interval = setInterval(() => {
-        setCurrentStep((prev) => {
-          if (prev < auditSteps.length - 1) {
-            return prev + 1;
-          } else {
-            clearInterval(interval);
-            setTimeout(() => {
-              setIsRunning(false);
-              if (onComplete) onComplete();
-            }, 1000);
-            return prev;
-          }
-        });
-      }, 1200);
+  const handleStart = async () => {
+    setStatus('running');
+    setError(null);
+    setResult(null);
 
-      return () => clearInterval(interval);
+    const res: CreateAuditResult = await createAudit();
+
+    if (res.error) {
+      setStatus('error');
+      setError(res.error);
+      return;
     }
-  }, [isRunning, onComplete]);
+
+    if (res.audit) {
+      setResult(res.audit);
+      setStatus('done');
+    }
+  };
+
+  const handleClose = () => {
+    setStatus('idle');
+    setResult(null);
+    setError(null);
+    onClose();
+  };
+
+  const handleDone = () => {
+    if (result) onComplete?.(result);
+    handleClose();
+  };
 
   if (!isOpen) return null;
 
-  const handleStartAudit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsRunning(true);
-    setCurrentStep(0);
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-lg glass-panel rounded-2xl border border-rose-200 shadow-2xl p-6 overflow-hidden">
+      <div className="relative w-full max-w-lg glass-panel rounded-2xl border border-rose-200 shadow-2xl overflow-hidden max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200">
+        <div className="flex items-center justify-between p-6 pb-4 border-b border-slate-200 shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700">
-              <Sparkles className="w-5 h-5 animate-pulse" />
+              <Sparkles className={`w-5 h-5 ${status === 'running' ? 'animate-pulse' : ''}`} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-900">Run Signal AI Visibility Audit</h3>
-              <p className="text-xs text-slate-500">Simulate how top AI search engines index your profile</p>
+              <h3 className="text-lg font-bold text-slate-900">Visibility Audit</h3>
+              <p className="text-xs text-slate-500">
+                {status === 'idle' && 'Generate discovery queries from your profile'}
+                {status === 'running' && 'Generating queries with AI…'}
+                {status === 'done' && `${result?.queries_count ?? 0} queries generated`}
+                {status === 'error' && 'Audit encountered an error'}
+              </p>
             </div>
           </div>
           <button
-            onClick={onClose}
-            disabled={isRunning}
+            onClick={handleClose}
+            disabled={status === 'running'}
             className="text-slate-400 hover:text-slate-900 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {!isRunning ? (
-          <form onSubmit={handleStartAudit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
-                Freelancer Name / Brand
-              </label>
-              <input
-                type="text"
-                value={profileName}
-                onChange={(e) => setProfileName(e.target.value)}
-                required
-                placeholder="e.g. Alex Vance"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-rose-900 focus:ring-1 focus:ring-rose-900 transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
-                Target Role & Expertise
-              </label>
-              <input
-                type="text"
-                value={profileRole}
-                onChange={(e) => setProfileRole(e.target.value)}
-                required
-                placeholder="e.g. Senior Next.js Developer"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-rose-900 focus:ring-1 focus:ring-rose-900 transition"
-              />
-            </div>
-
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900 flex items-start gap-2.5">
-              <Bot className="w-4 h-4 text-rose-700 shrink-0 mt-0.5" />
-              <span>
-                Signal will test high-intent client queries across <strong>ChatGPT-4o</strong>, <strong>Perplexity AI</strong>, <strong>Claude 3.5</strong>, and <strong>Gemini</strong>.
-              </span>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <Button type="button" variant="ghost" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="glow" icon={<Search className="w-4 h-4" />}>
-                Start Live Scan
-              </Button>
-            </div>
-          </form>
-        ) : (
-          <div className="py-6 space-y-6">
-            <div className="text-center space-y-2">
-              <div className="inline-flex p-3 rounded-full bg-rose-50 border border-rose-200 text-rose-700 mb-1">
-                <Loader2 className="w-8 h-8 animate-spin" />
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {/* IDLE — start screen */}
+          {status === 'idle' && (
+            <div className="space-y-4">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900 flex items-start gap-2.5">
+                <Sparkles className="w-4 h-4 text-rose-700 shrink-0 mt-0.5" />
+                <span>
+                  Signal will analyze your profile and generate <strong>8 professional discovery queries</strong> across
+                  local, specialization, service, and hiring-intent categories.
+                </span>
               </div>
-              <h4 className="text-base font-bold text-slate-900">Analyzing AI Visibility for {profileName}</h4>
-              <p className="text-xs text-slate-500">{profileRole}</p>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <Button type="button" variant="ghost" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  variant="glow"
+                  onClick={handleStart}
+                  icon={<Search className="w-4 h-4" />}
+                >
+                  Start Audit
+                </Button>
+              </div>
             </div>
+          )}
 
-            {/* Step list */}
-            <div className="space-y-3 px-2">
-              {auditSteps.map((step, idx) => {
-                const isDone = idx < currentStep;
-                const isCurrent = idx === currentStep;
+          {/* RUNNING */}
+          {status === 'running' && (
+            <div className="py-6 text-center space-y-4">
+              <Loader2 className="w-10 h-10 text-rose-700 animate-spin mx-auto" />
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">Generating discovery queries</h4>
+                <p className="text-xs text-slate-500 mt-1">
+                  Analyzing your profile and creating targeted search queries…
+                </p>
+              </div>
+            </div>
+          )}
 
-                return (
+          {/* ERROR */}
+          {status === 'error' && error && (
+            <div className="space-y-4">
+              <Alert type="error" title="Audit failed">
+                {error}
+              </Alert>
+              <div className="flex items-center justify-end gap-3">
+                <Button variant="ghost" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button variant="glow" onClick={handleStart} icon={<Search className="w-4 h-4" />}>
+                  Retry
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* DONE — show generated queries */}
+          {status === 'done' && result && (
+            <div className="space-y-4">
+              <Alert type="success" title={`${result.queries_count} queries generated`}>
+                Your profile has been analyzed. Review the generated discovery queries below.
+              </Alert>
+
+              <div className="space-y-2">
+                {result.queries.map((q) => (
                   <div
-                    key={step.id}
-                    className={`flex items-center justify-between p-3 rounded-xl border text-xs transition-all duration-300 ${
-                      isDone
-                        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                        : isCurrent
-                        ? 'bg-rose-50 border-rose-300 text-rose-900 shadow-md shadow-rose-900/10'
-                        : 'bg-white border-slate-200 text-slate-500'
-                    }`}
+                    key={q.id}
+                    className="p-3 rounded-xl border border-slate-200 bg-white hover:border-rose-200 transition-colors"
                   >
-                    <div className="flex items-center gap-2.5">
-                      {isDone ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      ) : isCurrent ? (
-                        <Loader2 className="w-4 h-4 text-rose-700 animate-spin shrink-0" />
-                      ) : (
-                        <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0" />
-                      )}
-                      <span>{step.label}</span>
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 shrink-0">
+                        {QUERY_TYPE_ICONS[q.query_type] ?? <Search className="w-3.5 h-3.5 text-slate-400" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-slate-900 leading-snug">
+                          {q.query_text}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
+                            {QUERY_TYPE_LABELS[q.query_type] ?? q.query_type}
+                          </span>
+                          <span className="text-[10px] text-slate-400">{q.category}</span>
+                        </div>
+                      </div>
                     </div>
-                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-500">
-                      {step.engine}
-                    </span>
                   </div>
-                );
-              })}
-            </div>
-
-            {currentStep === auditSteps.length - 1 && (
-              <div className="pt-2 text-center text-xs text-emerald-700 font-semibold flex items-center justify-center gap-1.5 animate-bounce">
-                <span>Audit Complete! Preparing Report...</span>
-                <ArrowRight className="w-4 h-4" />
+                ))}
               </div>
-            )}
-          </div>
-        )}
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <Button variant="ghost" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button variant="glow" onClick={handleDone} icon={<ArrowRight className="w-4 h-4" />}>
+                  View Dashboard
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
