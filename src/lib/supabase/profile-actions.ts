@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createClient } from './server';
+import { createClient, isSupabaseConfigured } from './server';
 import { getCurrentUser } from './session';
 import type { Profile, ProfileLink, ProfileWithLinks } from './types';
 
@@ -29,24 +29,31 @@ export interface ProfileFormState {
 export async function getProfile(): Promise<ProfileWithLinks | null> {
   const user = await getCurrentUser();
   if (!user) return null;
+  if (!isSupabaseConfigured()) return null;
 
   const db = createClient();
 
-  const { data: profile, error: profileError } = await db
-    .from('profiles')
-    .select('*')
-    .eq('user_id', user.id)
-    .single();
+  try {
+    const { data: profile, error: profileError } = await db
+      .from('profiles')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
 
-  if (profileError || !profile) return null;
+    if (profileError || !profile) return null;
 
-  const { data: links } = await db
-    .from('profile_links')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: true });
+    const { data: links } = await db
+      .from('profile_links')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true });
 
-  return { ...profile, links: links ?? [] };
+    return { ...profile, links: links ?? [] };
+  } catch {
+    // Supabase not configured / unreachable — treat as "no profile" so the
+    // dashboard still renders instead of hanging.
+    return null;
+  }
 }
 
 // ------------------------------------------------------------------
@@ -60,6 +67,11 @@ export async function upsertProfile(
   const user = await getCurrentUser();
   if (!user) {
     return { error: 'You must be signed in to save your profile.' };
+  }
+  if (!isSupabaseConfigured()) {
+    return {
+      error: 'Database not configured. Set your real Supabase credentials in .env.local and restart the dev server.',
+    };
   }
 
   const name = String(formData.get('name') ?? '').trim();
@@ -140,6 +152,11 @@ export async function deleteProfile(): Promise<ProfileFormState> {
   const user = await getCurrentUser();
   if (!user) {
     return { error: 'You must be signed in.' };
+  }
+  if (!isSupabaseConfigured()) {
+    return {
+      error: 'Database not configured. Set your real Supabase credentials in .env.local and restart the dev server.',
+    };
   }
 
   const db = createClient();

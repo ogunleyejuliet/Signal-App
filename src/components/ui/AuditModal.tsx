@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import {
-  X, Search, Sparkles, CheckCircle2, Loader2, AlertCircle,
-  ArrowRight, ExternalLink, Globe, Code2, Wrench, Target,
+  X, Search, Sparkles, Loader2, ArrowRight,
+  Globe, Code2, Wrench, Target,
 } from 'lucide-react';
 import { Button } from './Button';
 import { Alert } from './Alert';
@@ -15,13 +15,6 @@ export interface AuditModalProps {
   onClose: () => void;
   onComplete?: (audit: AuditWithQueries) => void;
 }
-
-const STATUS_LABELS: Record<string, string> = {
-  pending: 'Queued',
-  processing: 'Generating queries…',
-  completed: 'Complete',
-  failed: 'Failed',
-};
 
 const QUERY_TYPE_ICONS: Record<string, React.ReactNode> = {
   local_discovery: <Globe className="w-3.5 h-3.5 text-blue-600" />,
@@ -162,18 +155,26 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
             </div>
           )}
 
-          {/* DONE — show generated queries */}
+          {/* DONE — show generated queries with visibility results */}
           {status === 'done' && result && (
             <div className="space-y-4">
-              <Alert type="success" title={`${result.queries_count} queries generated`}>
-                Your profile has been analyzed. Review the generated discovery queries below.
+              <Alert type="success" title={`${result.queries_count} queries checked`}>
+                Your profile has been analyzed across AI providers. Review the results below.
               </Alert>
 
               <div className="space-y-2">
                 {result.queries.map((q) => (
                   <div
                     key={q.id}
-                    className="p-3 rounded-xl border border-slate-200 bg-white hover:border-rose-200 transition-colors"
+                    className={`p-3 rounded-xl border bg-white transition-colors ${
+                      q.visibility_status === 'recommended'
+                        ? 'border-emerald-300 bg-emerald-50/50'
+                        : q.visibility_status === 'mentioned'
+                        ? 'border-blue-300 bg-blue-50/50'
+                        : q.visibility_status === 'not_found'
+                        ? 'border-slate-200'
+                        : 'border-amber-200 bg-amber-50/50'
+                    }`}
                   >
                     <div className="flex items-start gap-3">
                       <div className="mt-0.5 shrink-0">
@@ -183,12 +184,22 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
                         <p className="text-sm font-semibold text-slate-900 leading-snug">
                           {q.query_text}
                         </p>
-                        <div className="flex items-center gap-2 mt-1.5">
+                        <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                           <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
                             {QUERY_TYPE_LABELS[q.query_type] ?? q.query_type}
                           </span>
-                          <span className="text-[10px] text-slate-400">{q.category}</span>
+                          {q.visibility_status && (
+                            <VisibilityBadge status={q.visibility_status} position={q.position} />
+                          )}
+                          {q.provider && (
+                            <span className="text-[10px] text-slate-400 capitalize">{q.provider}</span>
+                          )}
                         </div>
+                        {q.other_professionals && q.other_professionals.length > 0 && (
+                          <p className="text-[10px] text-slate-500 mt-1.5">
+                            Others mentioned: {q.other_professionals.join(', ')}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -210,3 +221,37 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose, onCompl
     </div>
   );
 };
+
+// ------------------------------------------------------------------
+// Visibility status badge
+// ------------------------------------------------------------------
+
+import type { VisibilityStatus } from '@/lib/supabase/types';
+
+const VISUAL_CONFIG: Record<
+  VisibilityStatus,
+  { bg: string; text: string; label: string }
+> = {
+  recommended: { bg: 'bg-emerald-100', text: 'text-emerald-800', label: 'Recommended' },
+  mentioned: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Mentioned' },
+  not_found: { bg: 'bg-slate-100', text: 'text-slate-600', label: 'Not found' },
+  could_not_check: { bg: 'bg-amber-100', text: 'text-amber-800', label: 'Could not check' },
+};
+
+function VisibilityBadge({
+  status,
+  position,
+}: {
+  status: VisibilityStatus;
+  position: number | null;
+}) {
+  const cfg = VISUAL_CONFIG[status] ?? VISUAL_CONFIG.not_found;
+  const positionLabel = position !== null ? ` (#${position})` : '';
+
+  return (
+    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.text}`}>
+      {cfg.label}
+      {positionLabel}
+    </span>
+  );
+}

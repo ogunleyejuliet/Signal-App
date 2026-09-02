@@ -9,14 +9,15 @@ import {
   Settings, 
   Sparkles, 
   ChevronRight,
-  ShieldCheck
+  ShieldCheck,
+  History
 } from 'lucide-react';
 import { mockProfile } from '../data/mockData';
 import type { ProfileWithLinks } from '@/lib/supabase/types';
 
 export interface SidebarProps {
-  activeTab: 'dashboard' | 'report' | 'engines' | 'tips' | 'settings';
-  onSelectTab: (tab: 'dashboard' | 'report' | 'engines' | 'tips' | 'settings') => void;
+  activeTab: 'dashboard' | 'report' | 'engines' | 'tips' | 'history' | 'settings';
+  onSelectTab: (tab: 'dashboard' | 'report' | 'engines' | 'tips' | 'history' | 'settings') => void;
   onRunAudit: () => void;
   className?: string;
   profile?: ProfileWithLinks | null;
@@ -35,6 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const menuItems = [
     { id: 'dashboard', label: 'Overview Dashboard', icon: LayoutDashboard, badge: null },
     { id: 'report', label: 'Latest Audit Report', icon: FileText, badge: 'New' },
+    { id: 'history', label: 'Audit History', icon: History, badge: null },
     { id: 'engines', label: 'AI Engine Breakdown', icon: Bot, badge: '4 AI' },
     { id: 'tips', label: 'Optimization Guide', icon: CheckSquare, badge: '2 Action' },
     { id: 'settings', label: 'Profile Settings', icon: Settings, badge: null },

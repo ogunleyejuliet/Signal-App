@@ -1,14 +1,13 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createClient } from './server';
+import { createClient, isSupabaseConfigured } from './server';
 import { getCurrentUser } from './session';
 import { generateQueries } from '../llm/generate-queries';
+import { getProvider } from '../providers';
 import type {
   Audit,
-  AuditQuery,
   AuditWithQueries,
-  AuditStatus,
   ProfileSnapshot,
 } from './types';
 
@@ -49,21 +48,36 @@ export async function createAudit(): Promise<CreateAuditResult> {
   const user = await getCurrentUser();
   if (!user) return { error: 'You must be signed in.' };
 
+  if (!isSupabaseConfigured()) {
+    return {
+      error: 'Database not configured. Set your real Supabase credentials in .env.local and restart the dev server.',
+    };
+  }
+
   const db = createClient();
 
   // 1. Fetch live profile
-  const { data: profile, error: profileError } = await db
-    .from('profiles')
-    .select('*, profile_links(type, url)')
-    .eq('user_id', user.id)
-    .single();
+  let profile: { user_id: string; name: string; profession: string; location: string; specialization: string; services: string; target_clients: string; links?: { type: string; url: string }[] } | null;
 
-  if (profileError || !profile) {
-    return { error: 'Create a profile before running an audit.' };
+  try {
+    const { data, error: profileError } = await db
+      .from('profiles')
+      .select('*, profile_links(type, url)')
+      .eq('user_id', user.id)
+      .single();
+
+    if (profileError || !data) {
+      return { error: 'Create a profile before running an audit.' };
+    }
+    profile = data as typeof profile;
+  } catch (err) {
+    return {
+      error: `Could not reach the database: ${err instanceof Error ? err.message : 'unknown error'}`,
+    };
   }
 
   // 2. Build snapshot and insert audit (status = pending)
-  const snapshot = buildSnapshot(profile);
+  const snapshot = buildSnapshot(profile!);
 
   const { data: audit, error: auditError } = await db
     .from('audits')
@@ -99,23 +113,63 @@ export async function createAudit(): Promise<CreateAuditResult> {
       category: q.category,
     }));
 
-    const { error: queriesError } = await db
+    const { data: storedQueries, error: queriesError } = await db
       .from('audit_queries')
-      .insert(queryRows);
+      .insert(queryRows)
+      .select('id, query_text');
 
     if (queriesError) {
       throw new Error(`Failed to store queries: ${queriesError.message}`);
     }
 
-    // 6. Mark completed
+    // 6. Run each query through the provider
+    const provider = getProvider();
+
+    for (const sq of storedQueries) {
+      try {
+        const result = await provider.check({
+          query: sq.query_text,
+          freelancerName: snapshot.name,
+          snapshot,
+        });
+
+        await db
+          .from('audit_queries')
+          .update({
+            ai_response: result.responseText,
+            provider: result.provider,
+            visibility_status: result.classification.status,
+            position: result.classification.position,
+            other_professionals: result.classification.other_professionals,
+            checked_at: new Date().toISOString(),
+          })
+          .eq('id', sq.id);
+
+      } catch (queryErr) {
+        // Individual query failure — mark as could_not_check, continue with others
+        console.error('[createAudit] Query check failed:', sq.id, queryErr);
+        await db
+          .from('audit_queries')
+          .update({
+            visibility_status: 'could_not_check',
+            checked_at: new Date().toISOString(),
+          })
+          .eq('id', sq.id);
+      }
+    }
+
+    // 7. Mark completed
     await db
       .from('audits')
-      .update({ status: 'completed', queries_count: generated.length })
+      .update({
+        status: 'completed',
+        queries_count: storedQueries.length,
+      })
       .eq('id', audit.id);
 
     revalidatePath('/dashboard');
 
-    // 7. Fetch the full audit with queries
+    // 8. Fetch the full audit with queries
     const full = await getAudit(audit.id);
     return { audit: full! };
   } catch (err) {

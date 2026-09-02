@@ -47,8 +47,20 @@ export interface AuditQuery {
   query_text: string;
   query_type: QueryType;
   category: string;
+  ai_response: string | null;
+  provider: string | null;
+  visibility_status: VisibilityStatus | null;
+  position: number | null;
+  other_professionals: string[];
+  checked_at: string | null;
   created_at: string;
 }
+
+export type VisibilityStatus =
+  | 'recommended'
+  | 'mentioned'
+  | 'not_found'
+  | 'could_not_check';
 
 export interface AuditWithQueries extends Audit {
   queries: AuditQuery[];

@@ -22,7 +22,7 @@ export async function proxy(request: NextRequest) {
   const sessionUser = readSessionFromRequest(request);
 
   const { pathname } = request.nextUrl;
-  const isProtected = pathname.startsWith('/dashboard') || pathname.startsWith('/report');
+  const isProtected = pathname.startsWith('/dashboard') || pathname.startsWith('/report') || pathname.startsWith('/history');
   const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup');
 
   if (isProtected && !sessionUser) {
