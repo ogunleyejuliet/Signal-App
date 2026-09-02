@@ -6,8 +6,13 @@ import { Navbar } from '../Navbar';
 import { Sidebar } from '../Sidebar';
 import { DashboardView } from '../DashboardView';
 import { AuditModal } from '../ui/AuditModal';
+import type { ProfileWithLinks } from '@/lib/supabase/types';
 
-export const DashboardShell: React.FC = () => {
+interface DashboardShellProps {
+  profile: ProfileWithLinks | null;
+}
+
+export const DashboardShell: React.FC<DashboardShellProps> = ({ profile }) => {
   const router = useRouter();
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
 
@@ -27,15 +32,19 @@ export const DashboardShell: React.FC = () => {
           activeTab="dashboard"
           onSelectTab={(tab) => {
             if (tab === 'report') router.push('/report');
+            if (tab === 'settings') router.push('/dashboard/profile');
           }}
           onRunAudit={() => setIsAuditModalOpen(true)}
           className="hidden md:flex shrink-0"
+          profile={profile}
         />
 
         <main className="flex-1 min-w-0">
           <DashboardView
+            profile={profile}
             onRunAudit={() => setIsAuditModalOpen(true)}
             onViewReport={() => router.push('/report')}
+            onEditProfile={() => router.push('/dashboard/profile')}
           />
         </main>
       </div>

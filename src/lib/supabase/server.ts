@@ -1,5 +1,7 @@
-// Server-side Supabase client placeholder.
-// Currently unused — auth is handled by src/lib/auth/local.ts.
-// Re-introduce @supabase/ssr here when integrating real Supabase auth.
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
-export { /* createClient */ } from '../auth/local';
+export function createClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  return createSupabaseClient(url, key);
+}

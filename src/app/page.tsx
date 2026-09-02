@@ -72,11 +72,13 @@ export default function Home() {
           <main className="flex-1 min-w-0">
             {currentView === 'dashboard' && dashboardTab === 'dashboard' && (
               <DashboardView
+                profile={null}
                 onRunAudit={handleStartAudit}
                 onViewReport={() => {
                   setCurrentView('report');
                   setDashboardTab('report');
                 }}
+                onEditProfile={() => {}}
               />
             )}
 

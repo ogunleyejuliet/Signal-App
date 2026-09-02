@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { 
-  Sparkles, 
-  Search, 
-  Calendar, 
-  CheckCircle2, 
+import {
+  Sparkles,
+  Search,
+  Calendar,
+  CheckCircle2,
   ArrowRight,
   Clock,
-  ShieldCheck
+  UserPlus,
 } from 'lucide-react';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
@@ -17,18 +17,35 @@ import { Table } from './ui/Table';
 import { VisibilityScoreCard } from './product/VisibilityScoreCard';
 import { ProfessionalProfileSummary } from './product/ProfessionalProfileSummary';
 import { RecommendationCard } from './product/RecommendationCard';
-import { currentAudit, recentAuditsList, mockProfile } from '../data/mockData';
-import { Audit } from '../types';
+import { currentAudit, recentAuditsList } from '../data/mockData';
+import { Audit, FreelancerProfile } from '../types';
+import type { ProfileWithLinks } from '@/lib/supabase/types';
 
 export interface DashboardViewProps {
+  profile: ProfileWithLinks | null;
   onRunAudit: () => void;
   onViewReport: (auditId?: string) => void;
+  onEditProfile: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
+  profile,
   onRunAudit,
-  onViewReport
+  onViewReport,
+  onEditProfile,
 }) => {
+  // Map DB profile to the FreelancerProfile shape the card expects
+  const displayProfile: FreelancerProfile | null = profile
+    ? {
+        name: profile.name,
+        title: profile.profession,
+        location: profile.location,
+        avatarUrl: '',
+        bio: `${profile.specialization} · ${profile.services}`,
+        primarySkills: profile.services.split(',').map((s) => s.trim()).filter(Boolean),
+      }
+    : null;
+
   const auditColumns = [
     {
       header: 'Audit Name',
@@ -37,13 +54,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="font-bold text-slate-900 text-sm">{row.title}</div>
           <div className="text-[11px] text-slate-500">Target Role: {row.targetRole}</div>
         </div>
-      )
+      ),
     },
     {
       header: 'Execution Date',
       accessor: (row: Audit) => (
         <span className="text-xs font-mono text-slate-500">{row.date}</span>
-      )
+      ),
     },
     {
       header: 'Tested Queries',
@@ -51,7 +68,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <span className="text-xs text-slate-500">
           {row.queriesTestedCount} queries tested ({row.queriesCitedCount || 14} cited)
         </span>
-      )
+      ),
     },
     {
       header: 'Signal Index',
@@ -59,20 +76,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <span className="text-sm font-mono font-extrabold text-rose-700">
           {row.overallScore} / 100
         </span>
-      )
+      ),
     },
     {
       header: 'Action',
       accessor: (row: Audit) => (
-        <Button
-          variant="wine-soft"
-          size="sm"
-          onClick={() => onViewReport(row.id)}
-        >
+        <Button variant="wine-soft" size="sm" onClick={() => onViewReport(row.id)}>
           View Report
         </Button>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -84,23 +97,48 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             Freelancer Signal Dashboard
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Monitoring discoverability for <span className="text-rose-700 font-bold">{mockProfile.name}</span> ({mockProfile.title})
+            {displayProfile ? (
+              <>
+                Monitoring discoverability for{' '}
+                <span className="text-rose-700 font-bold">{displayProfile.name}</span> (
+                {displayProfile.title})
+              </>
+            ) : (
+              <span className="text-amber-600 font-medium">
+                Set up your profile to start monitoring.
+              </span>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button
-            variant="glow"
-            onClick={onRunAudit}
-            icon={<Sparkles className="w-4 h-4" />}
-          >
+          <Button variant="glow" onClick={onRunAudit} icon={<Sparkles className="w-4 h-4" />}>
             Run New Audit
           </Button>
         </div>
       </div>
 
+      {/* No-profile CTA */}
+      {!displayProfile && (
+        <Card borderVariant="wine" className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200">
+              <UserPlus className="w-6 h-6 text-rose-700" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">Complete your freelancer profile</h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Add your profession, services, and professional links so Signal AI can run targeted audits.
+              </p>
+            </div>
+          </div>
+          <Button variant="glow" size="sm" onClick={onEditProfile}>
+            Create Profile
+          </Button>
+        </Card>
+      )}
+
       {/* Main Metric Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Metric Card 1: Visibility Score Card */}
         <VisibilityScoreCard
           score={currentAudit.overallScore}
           queriesTested={currentAudit.queriesTestedCount}
@@ -108,7 +146,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           onRunAudit={onRunAudit}
         />
 
-        {/* Metric Card 2: Latest Audit Overview */}
         <Card borderVariant="wine" className="lg:col-span-2 space-y-5 flex flex-col justify-between">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -130,7 +167,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </p>
             </div>
 
-            {/* AI Engine Scores Summary */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
               {currentAudit.engineScores.map((engine) => (
                 <div key={engine.engine} className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
@@ -144,7 +180,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       style={{ width: `${engine.score}%` }}
                     />
                   </div>
-                  <span className="block text-[10px] text-slate-400 truncate font-semibold">{engine.rankPosition}</span>
+                  <span className="block text-[10px] text-slate-400 truncate font-semibold">
+                    {engine.rankPosition}
+                  </span>
                 </div>
               ))}
             </div>
@@ -169,7 +207,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       {/* Profile & Optimization Highlights */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <ProfessionalProfileSummary profile={mockProfile} />
+        {displayProfile ? (
+          <ProfessionalProfileSummary profile={displayProfile} onEditProfile={onEditProfile} />
+        ) : (
+          <Card borderVariant="wine" className="flex flex-col items-center justify-center text-center p-8 space-y-3">
+            <div className="p-3 rounded-2xl bg-slate-100">
+              <UserPlus className="w-6 h-6 text-slate-400" />
+            </div>
+            <p className="text-sm font-semibold text-slate-600">No profile yet</p>
+            <Button variant="wine-soft" size="sm" onClick={onEditProfile}>
+              Create Profile
+            </Button>
+          </Card>
+        )}
 
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
@@ -208,11 +258,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </Button>
         </div>
 
-        <Table
-          data={recentAuditsList}
-          columns={auditColumns}
-          keyExtractor={(row) => row.id}
-        />
+        <Table data={recentAuditsList} columns={auditColumns} keyExtractor={(row) => row.id} />
       </div>
     </div>
   );

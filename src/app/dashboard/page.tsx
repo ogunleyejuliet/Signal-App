@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/supabase/session';
+import { getProfile } from '@/lib/supabase/profile-actions';
 import { DashboardShell } from '@/components/shells/DashboardShell';
 
 export const metadata: Metadata = {
@@ -10,9 +11,9 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  if (!user) {
-    redirect('/login');
-  }
+  if (!user) redirect('/login');
 
-  return <DashboardShell />;
+  const profile = await getProfile();
+
+  return <DashboardShell profile={profile} />;
 }

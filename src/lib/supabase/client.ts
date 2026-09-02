@@ -1,3 +1,8 @@
-// Browser-side Supabase client placeholder.
-// Currently unused — auth is handled by src/lib/auth/local.ts.
-// Re-introduce @supabase/ssr here when integrating real Supabase auth.
+import { createBrowserClient } from '@supabase/ssr';
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}

@@ -12,20 +12,26 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { mockProfile } from '../data/mockData';
+import type { ProfileWithLinks } from '@/lib/supabase/types';
 
 export interface SidebarProps {
   activeTab: 'dashboard' | 'report' | 'engines' | 'tips' | 'settings';
   onSelectTab: (tab: 'dashboard' | 'report' | 'engines' | 'tips' | 'settings') => void;
   onRunAudit: () => void;
   className?: string;
+  profile?: ProfileWithLinks | null;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   onSelectTab,
   onRunAudit,
-  className = ''
+  className = '',
+  profile,
 }) => {
+  const displayName = profile?.name ?? mockProfile.name;
+  const displayTitle = profile?.profession ?? mockProfile.title;
+  const initials = displayName.split(' ').map((n: string) => n[0]).join('').slice(0, 2);
   const menuItems = [
     { id: 'dashboard', label: 'Overview Dashboard', icon: LayoutDashboard, badge: null },
     { id: 'report', label: 'Latest Audit Report', icon: FileText, badge: 'New' },
@@ -41,13 +47,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-rose-900 border border-rose-700 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-rose-900/20">
-              AV
+              {initials}
             </div>
             <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white" />
           </div>
           <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-xs font-extrabold text-slate-900 truncate">{mockProfile.name}</span>
-            <span className="text-[10px] text-slate-500 truncate font-medium">{mockProfile.title}</span>
+            <span className="text-xs font-extrabold text-slate-900 truncate">{displayName}</span>
+            <span className="text-[10px] text-slate-500 truncate font-medium">{displayTitle}</span>
           </div>
         </div>
 
